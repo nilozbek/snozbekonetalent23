@@ -24,7 +24,5 @@ AT SELECTION-SCREEN.
       ELSE.
         MESSAGE 'Sıfıra bölme hatası!!' TYPE 'E'.
       ENDIF.
-*    WHEN OTHERS.
-*      MESSAGE 'işlem seç!' TYPE 'E'.
   ENDCASE.
   cl_demo_output=>write( |Sonuç: { result }| ).
