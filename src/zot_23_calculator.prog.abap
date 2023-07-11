@@ -26,3 +26,4 @@ AT SELECTION-SCREEN.
       ENDIF.
   ENDCASE.
   cl_demo_output=>write( |Sonuç: { result }| ).
+  cl_demo_output=>display( ).
