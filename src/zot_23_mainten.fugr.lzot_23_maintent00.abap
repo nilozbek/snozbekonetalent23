@@ -7,6 +7,12 @@ DATA:  BEGIN OF STATUS_ZOT_23_T_P_AILE               .   "state vector
 DATA:  END OF STATUS_ZOT_23_T_P_AILE               .
 CONTROLS: TCTRL_ZOT_23_T_P_AILE
             TYPE TABLEVIEW USING SCREEN '0004'.
+*...processing: ZOT_23_T_P_EGTM.................................*
+DATA:  BEGIN OF STATUS_ZOT_23_T_P_EGTM               .   "state vector
+         INCLUDE STRUCTURE VIMSTATUS.
+DATA:  END OF STATUS_ZOT_23_T_P_EGTM               .
+CONTROLS: TCTRL_ZOT_23_T_P_EGTM
+            TYPE TABLEVIEW USING SCREEN '0005'.
 *...processing: ZOT_23_T_P_ILTSM................................*
 DATA:  BEGIN OF STATUS_ZOT_23_T_P_ILTSM              .   "state vector
          INCLUDE STRUCTURE VIMSTATUS.
@@ -27,10 +33,12 @@ CONTROLS: TCTRL_ZOT_23_T_P_MAST
             TYPE TABLEVIEW USING SCREEN '0002'.
 *.........table declarations:.................................*
 TABLES: *ZOT_23_T_P_AILE               .
+TABLES: *ZOT_23_T_P_EGTM               .
 TABLES: *ZOT_23_T_P_ILTSM              .
 TABLES: *ZOT_23_T_P_ITUR               .
 TABLES: *ZOT_23_T_P_MAST               .
 TABLES: ZOT_23_T_P_AILE                .
+TABLES: ZOT_23_T_P_EGTM                .
 TABLES: ZOT_23_T_P_ILTSM               .
 TABLES: ZOT_23_T_P_ITUR                .
 TABLES: ZOT_23_T_P_MAST                .
