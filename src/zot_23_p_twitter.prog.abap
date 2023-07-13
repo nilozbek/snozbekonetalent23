@@ -21,12 +21,13 @@ SELECTION-SCREEN BEGIN OF BLOCK b2 WITH FRAME TITLE TEXT-002.
 SELECTION-SCREEN END OF BLOCK b2.
 
 START-OF-SELECTION.
-DATA: gs_mytwitter TYPE zot_23_t_tweet,
+DATA: gs_mytwitter TYPE zot_23_t_tweet,          "Mantigina tekrar bak
       lt_mytwitter TYPE TABLE OF zot_23_t_tweet.
 
 CASE 'X'.
   WHEN 'X'.
-    IF tweet_at = 'X'.
+
+    IF tweet_at = 'X'.         "Ilk yaptigim sekilde hata vermisti nedenini sor Calculatordaki ile ayni mantik!
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.
       APPEND gs_mytwitter TO lt_mytwitter.
@@ -38,6 +39,7 @@ CASE 'X'.
       ELSE.
         WRITE :/ 'Tweet Atılamadı'.
       ENDIF.
+
     ELSEIF t_degis = 'X'.
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.
@@ -52,6 +54,7 @@ CASE 'X'.
       ELSE.
         WRITE :/ 'Tweetin Değişmedi, dikkat!'.
       ENDIF.
+
     ELSEIF t_sil = 'X'.
       gs_mytwitter-tweet_id = p_tw_id.
 
@@ -62,6 +65,7 @@ CASE 'X'.
       ELSE.
         WRITE :/ 'Tweetini Silemedin, kontrol et!'.
       ENDIF.
+
     ELSEIF t_goster = 'X'.
       SELECT * FROM zot_23_t_tweet
         INTO TABLE @lt_mytwitter
@@ -70,8 +74,12 @@ CASE 'X'.
       IF lt_mytwitter IS NOT INITIAL.
         LOOP AT lt_mytwitter INTO gs_mytwitter.
           WRITE: / 'Tweet ID:', gs_mytwitter-tweet_id.
+*         cl_demo_output=>write( |Tweet ID: { gs_mytwitter-tweet_id }| ).  "/" bu sekilde alt satir nasil yapilirdi bak
+
           WRITE: / 'Tweet:', gs_mytwitter-tweet.
+*         cl_demo_output=>write( |Tweet: { gs_mytwitter-tweet }| ).
         ENDLOOP.
+
       ELSE.
         WRITE :/ 'Tweet yok, bulunmadı!'.
       ENDIF.
@@ -80,7 +88,7 @@ CASE 'X'.
     ENDIF.
 ENDCASE.
 
-
+*         cl_demo_output=>display( ).
 
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 *    WHEN tweet_at.
