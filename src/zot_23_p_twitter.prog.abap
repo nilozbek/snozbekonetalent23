@@ -8,8 +8,8 @@ REPORT zot_23_p_twitter.
 *ODEV 13.07 TARIHINDE BITTI SONRASINDA UZERINDE GUNCELLEME YAPTIM.
 
 SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
-  PARAMETERS: p_tw_id TYPE c LENGTH 4 OBLIGATORY,
-              p_tweet TYPE c LENGTH 100 OBLIGATORY.
+  PARAMETERS: p_tw_id TYPE c LENGTH 4,
+              p_tweet TYPE c LENGTH 100.
 
 SELECTION-SCREEN END OF BLOCK b1.
 
@@ -23,7 +23,7 @@ SELECTION-SCREEN BEGIN OF BLOCK b2 WITH FRAME TITLE TEXT-002.
 SELECTION-SCREEN END OF BLOCK b2.
 
 START-OF-SELECTION.
-  DATA: gs_mytwitter TYPE zot_23_t_tweet,          "Mantigina tekrar bak
+  DATA: gs_mytwitter TYPE zot_23_t_tweet,
         lt_mytwitter TYPE TABLE OF zot_23_t_tweet.
 
   CASE 'X'.
@@ -34,19 +34,21 @@ START-OF-SELECTION.
       APPEND gs_mytwitter TO lt_mytwitter.
       CLEAR gs_mytwitter.
 
-      IF gs_mytwitter-tweet_id EQ p_tw_id.      "BAK
-      WRITE :/ 'Tweet ID aynı!'.
-      ELSE.
-
-      INSERT zot_23_t_tweet FROM TABLE @lt_mytwitter.
-
+      SELECT COUNT(*)
+      FROM zot_23_t_tweet
+      WHERE tweet_id = @p_tw_id.
       IF sy-subrc = 0.
-      COMMIT WORK AND WAIT.
-        WRITE :/ 'Tweet Atıldı'.
+        WRITE :/ 'Tweet ID aynı!'.
       ELSE.
-        WRITE :/ 'Tweet Atılamadı'.
+        INSERT zot_23_t_tweet FROM TABLE @lt_mytwitter.
+
+        IF sy-subrc = 0.
+          COMMIT WORK AND WAIT.
+          WRITE :/ 'Tweet Atıldı'.
+        ELSE.
+          WRITE :/ 'Tweet Atılamadı'.
+        ENDIF.
       ENDIF.
-ENDIF.
     WHEN t_degis .
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.
@@ -56,7 +58,7 @@ ENDIF.
       MODIFY zot_23_t_tweet FROM TABLE @lt_mytwitter.
 
       IF sy-subrc = 0.
-      COMMIT WORK AND WAIT.
+        COMMIT WORK AND WAIT.
         WRITE :/ 'Tweetin Değişti!'.
       ELSE.
         WRITE :/ 'Tweetin Değişmedi, dikkat!'.
@@ -68,7 +70,7 @@ ENDIF.
       DELETE FROM zot_23_t_tweet WHERE tweet_id = gs_mytwitter-tweet_id.
 
       IF sy-subrc = 0.
-      COMMIT WORK AND WAIT.
+        COMMIT WORK AND WAIT.
         WRITE :/ 'Tweetini Sildin!'.
       ELSE.
         WRITE :/ 'Tweetini Silemedin, kontrol et!'.
