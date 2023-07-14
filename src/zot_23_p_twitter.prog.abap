@@ -5,6 +5,8 @@
 *&---------------------------------------------------------------------*
 REPORT zot_23_p_twitter.
 
+*ODEV 13.07 TARIHINDE BITTI SONRASINDA UZERINDE GUNCELLEME YAPTIM.
+
 SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
   PARAMETERS: p_tw_id TYPE c LENGTH 4 OBLIGATORY,
               p_tweet TYPE c LENGTH 100 OBLIGATORY.
