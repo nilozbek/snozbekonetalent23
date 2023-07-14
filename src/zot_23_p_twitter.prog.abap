@@ -21,52 +21,58 @@ SELECTION-SCREEN BEGIN OF BLOCK b2 WITH FRAME TITLE TEXT-002.
 SELECTION-SCREEN END OF BLOCK b2.
 
 START-OF-SELECTION.
-DATA: gs_mytwitter TYPE zot_23_t_tweet,          "Mantigina tekrar bak
-      lt_mytwitter TYPE TABLE OF zot_23_t_tweet.
+  DATA: gs_mytwitter TYPE zot_23_t_tweet,          "Mantigina tekrar bak
+        lt_mytwitter TYPE TABLE OF zot_23_t_tweet.
 
-CASE 'X'.
-  WHEN 'X'.
+  CASE 'X'.
+    WHEN tweet_at.
 
-    IF tweet_at = 'X'.         "Ilk yaptigim sekilde hata vermisti nedenini sor Calculatordaki ile ayni mantik!
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.
       APPEND gs_mytwitter TO lt_mytwitter.
+      CLEAR gs_mytwitter.
+
+      IF gs_mytwitter-tweet_id EQ p_tw_id.      "BAK
+      WRITE :/ 'Tweet ID aynı!'.
+      ELSE.
 
       INSERT zot_23_t_tweet FROM TABLE @lt_mytwitter.
 
       IF sy-subrc = 0.
+      COMMIT WORK AND WAIT.
         WRITE :/ 'Tweet Atıldı'.
       ELSE.
         WRITE :/ 'Tweet Atılamadı'.
       ENDIF.
-
-    ELSEIF t_degis = 'X'.
+ENDIF.
+    WHEN t_degis .
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.
       APPEND gs_mytwitter TO lt_mytwitter.
+      CLEAR gs_mytwitter.
 
-
-      gs_mytwitter-tweet = p_tweet.    "tekrar bak
       MODIFY zot_23_t_tweet FROM TABLE @lt_mytwitter.
 
       IF sy-subrc = 0.
+      COMMIT WORK AND WAIT.
         WRITE :/ 'Tweetin Değişti!'.
       ELSE.
         WRITE :/ 'Tweetin Değişmedi, dikkat!'.
       ENDIF.
 
-    ELSEIF t_sil = 'X'.
+    WHEN t_sil.
       gs_mytwitter-tweet_id = p_tw_id.
 
       DELETE FROM zot_23_t_tweet WHERE tweet_id = gs_mytwitter-tweet_id.
 
       IF sy-subrc = 0.
+      COMMIT WORK AND WAIT.
         WRITE :/ 'Tweetini Sildin!'.
       ELSE.
         WRITE :/ 'Tweetini Silemedin, kontrol et!'.
       ENDIF.
 
-    ELSEIF t_goster = 'X'.
+    WHEN t_goster.
       SELECT * FROM zot_23_t_tweet
         INTO TABLE @lt_mytwitter
         WHERE tweet_id = @p_tw_id.
@@ -74,7 +80,7 @@ CASE 'X'.
       IF lt_mytwitter IS NOT INITIAL.
         LOOP AT lt_mytwitter INTO gs_mytwitter.
           WRITE: / 'Tweet ID:', gs_mytwitter-tweet_id.
-*         cl_demo_output=>write( |Tweet ID: { gs_mytwitter-tweet_id }| ).  "/" bu sekilde alt satir nasil yapilirdi bak
+*         cl_demo_output=>write( |Tweet ID: { gs_mytwitter-tweet_id }| ).
 
           WRITE: / 'Tweet:', gs_mytwitter-tweet.
 *         cl_demo_output=>write( |Tweet: { gs_mytwitter-tweet }| ).
@@ -83,54 +89,26 @@ CASE 'X'.
       ELSE.
         WRITE :/ 'Tweet yok, bulunmadı!'.
       ENDIF.
-    ELSE.
-      WRITE :/ 'Başka bir şey seç!'.
-    ENDIF.
-ENDCASE.
+
+  ENDCASE.
 
 *         cl_demo_output=>display( ).
-
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 *    WHEN tweet_at.
 *      gs_mytwitter = VALUE #( ( tweet_id = p_tw_id
 *                              tweet = p_tweet ) ).
 *                              INSERT zot_23_t_tweet FROM TABLE @gs_mytwitter.
 *                              COMMIT WORK AND WAIT.
-*  IF sy-subrc = 0.
-*    WRITE :/ 'Success'.
-*  ELSE.
-*    WRITE :/ 'Error'.
-*  ENDIF.
 
 *    WHEN t_degis.
 *    MODIFY zot_23_t_tweet FROM TABLE @gs_mytwitter.
 *    COMMIT WORK AND WAIT.
-*  IF sy-subrc = 0.
-*    WRITE :/ 'Success'.
-*  ELSE.
-*    WRITE :/ 'Error'.
-*  ENDIF.
-      """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 *INSERT zot_23_t_tweet FROM @( VALUE #( tweet_id = p_tw_id
 *                                       tweet = p_tweet ) ).
 
-
-
 *DELETE FROM zot_23_t_tweet WHERE tweet_id = tweet_id.
-*
-*  COMMIT WORK AND WAIT.
-*  IF sy-subrc = 0.
-*    WRITE :/ 'Success'.
-*  ELSE.
-*    WRITE :/ 'Error'.
-*  ENDIF.
-*
+
 *  UPDATE zot_23_t_tweet SET tweet = tweet
 *  WHERE tweet_id = tweet_id.
-*
 *  COMMIT WORK AND WAIT.
-*  IF sy-subrc = 0.
-*    WRITE :/ 'Success'.
-*  ELSE.
-*    WRITE :/ 'Error'.
-*  ENDIF.
