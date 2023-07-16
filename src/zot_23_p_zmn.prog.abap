@@ -1,0 +1,34 @@
+*&---------------------------------------------------------------------*
+*& Report zot_23_p_zmn
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zot_23_p_zmn.
+
+
+DATA: ls_zmnhesapla TYPE zot_23_t_zmn,
+      lt_zmnhesapla TYPE TABLE OF zot_23_t_zmn.
+
+SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
+SELECT-OPTIONS s_index FOR ls_zmnhesapla-indexx.
+SELECTION-SCREEN END OF BLOCK b1.
+
+AT SELECTION-SCREEN.
+START-OF-SELECTION.
+
+SELECT * FROM zot_23_t_zmn INTO TABLE lt_zmnhesapla WHERE indexx IN s_index.
+
+LOOP AT lt_zmnhesapla INTO ls_zmnhesapla.
+
+DATA: lv_gun_farki TYPE i,
+      lv_saat_farki TYPE i.
+
+      lv_gun_farki = ls_zmnhesapla-bitis_tarihi - ls_zmnhesapla-baslangic_tarihi.
+      lv_saat_farki = ls_zmnhesapla-bitis_saati - ls_zmnhesapla-baslangic_saati.
+
+      IF lv_gun_farki <> 0 OR lv_saat_farki <> 0.
+      WRITE :/ 'Index ID:', ls_zmnhesapla-indexx.
+      WRITE :/ 'Tarihler Arası Fark:', lv_gun_farki, 'gün.'.
+      WRITE :/ 'Saatler Arası Fark:', lv_saat_farki, 'saat.'.
+      ENDIF.
+      ENDLOOP.
