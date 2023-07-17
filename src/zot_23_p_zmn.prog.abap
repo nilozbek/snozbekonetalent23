@@ -26,12 +26,20 @@ DATA: lv_gun_farki TYPE i,
       lv_dakika_farki TYPE i.
 
       lv_gun_farki = ls_zmnhesapla-bitis_tarihi - ls_zmnhesapla-baslangic_tarihi.
+*      DATA(p_saatbas) = ls_zmnhesapla-baslangic_saati.
+*      DATA(p_saatbit) = ls_zmnhesapla-bitis_saati.
 
       IF ls_zmnhesapla-bitis_saati LE ls_zmnhesapla-baslangic_saati.
-      lv_saat_farki = ls_zmnhesapla-baslangic_saati - ls_zmnhesapla-bitis_saati.
+      lv_saat_farki = ( ls_zmnhesapla-baslangic_saati - ls_zmnhesapla-bitis_saati ) / 3600.
       ELSE.
-      lv_saat_farki = ls_zmnhesapla-bitis_saati - ls_zmnhesapla-baslangic_saati.
+      lv_saat_farki = ( ls_zmnhesapla-bitis_saati - ls_zmnhesapla-baslangic_saati ) / 3600.
       ENDIF.
+
+*      IF p_saatbit LE p_saatbas.
+*      lv_saat_farki = p_saatbas(2) - p_saatbit(2).
+*      ELSE.
+*      lv_saat_farki = p_saatbit(2) - p_saatbas(2).
+*      ENDIF.
 
       lv_yil_farki = lv_gun_farki / 365.
       lv_dakika_farki = lv_saat_farki / 60.
