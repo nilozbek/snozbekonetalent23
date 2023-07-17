@@ -21,14 +21,18 @@ SELECT * FROM zot_23_t_zmn INTO TABLE lt_zmnhesapla WHERE indexx IN s_index.
 LOOP AT lt_zmnhesapla INTO ls_zmnhesapla.
 
 DATA: lv_gun_farki TYPE i,
-      lv_saat_farki TYPE i.
+      lv_saat_farki TYPE i,
+      lv_yil_farki TYPE i.
 
       lv_gun_farki = ls_zmnhesapla-bitis_tarihi - ls_zmnhesapla-baslangic_tarihi.
       lv_saat_farki = ls_zmnhesapla-bitis_saati - ls_zmnhesapla-baslangic_saati.
+      lv_yil_farki = lv_gun_farki / 365.
 
       IF lv_gun_farki <> 0 OR lv_saat_farki <> 0.
       WRITE :/ 'Index ID:', ls_zmnhesapla-indexx.
-      WRITE :/ 'Tarihler Arası Fark:', lv_gun_farki, 'gün.'.
+      WRITE :/ 'Yıllar Arası Fark:', lv_yil_farki, 'yıl.'.
+      WRITE :/ 'Günler Arası Fark:', lv_gun_farki, 'gün.'.
       WRITE :/ 'Saatler Arası Fark:', lv_saat_farki, 'saat.'.
+
       ENDIF.
       ENDLOOP.
