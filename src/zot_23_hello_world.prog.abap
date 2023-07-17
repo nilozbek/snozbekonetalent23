@@ -6,3 +6,7 @@
 REPORT ZOT_23_HELLO_WORLD.
 
 WRITE 'Hello World'.
+
+*cl_demo_output=>display( 'Hello World' ).
+*
+*cl_demo_output=>display( ).
