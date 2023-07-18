@@ -54,8 +54,9 @@ LOOP AT lt_material INTO DATA(ls_material).
   WITH KEY meins = ls_material-meins.
 
   IF sy-subrc EQ 0.
-    MODIFY lt_material FROM ls_material.
+
     ls_material-menge += 10.
+    MODIFY lt_material FROM ls_material.
 
   ENDIF.
 ENDLOOP.
@@ -89,7 +90,7 @@ COLLECT ls_material_group_total INTO lt_material_group_total.
   "IF lt_material_group_total < 10.
  " ENDIF.
 ENDLOOP.
-
+    cl_demo_output=>write( lt_combined_datas ).
     DELETE lt_combined_datas WHERE menge < 10.
 
 
@@ -97,6 +98,7 @@ SORT lt_combined_datas BY menge ASCENDING.
 SORT lt_material_group_total BY menge DESCENDING.
 
 *WRITE :/ lt_combined_datas.  HATA VERDI NEDEN?
-cl_demo_output=>display( lt_combined_datas ).
+cl_demo_output=>write( lt_combined_datas ).
 
-cl_demo_output=>display( lt_material_group_total ).
+cl_demo_output=>write( lt_material_group_total ).
+cl_demo_output=>display( ).
