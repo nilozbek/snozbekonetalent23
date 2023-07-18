@@ -87,10 +87,10 @@ LOOP AT lt_combined_datas INTO DATA(ls_combine).
 COLLECT ls_material_group_total INTO lt_material_group_total.
 
   "IF lt_material_group_total < 10.
-    DELETE lt_combined_datas WHERE menge < 10.
  " ENDIF.
 ENDLOOP.
 
+    DELETE lt_combined_datas WHERE menge < 10.
 
 
 SORT lt_combined_datas BY menge ASCENDING.
