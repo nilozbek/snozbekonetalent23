@@ -4,44 +4,42 @@
 *&
 *&---------------------------------------------------------------------*
 REPORT zot_23_p_internal_tables.
+*TYPES: BEGIN OF lty_collect_material,
+*         matkl TYPE zot_00_t_materia-matkl,
+*         menge TYPE zot_00_t_materia-menge,
+*       END OF lty_collect_material.
 
-"NOTLAR:
-"gt_material : internal table
-"z li tablodan çekilen : gs_material_ab
-"internal table a benim attığım : gs_material_c
-"gt_material_c : ikinci internal table, matkl = 'C' ler için
+DATA: lt_material TYPE TABLE OF zot_00_t_materia.
 
-DATA: gt_material TYPE TABLE OF zot_00_t_materia.
+SELECT * FROM zot_00_t_materia INTO TABLE lt_material.
+DATA: lt_material_2 TYPE SORTED TABLE OF zot_00_t_materia WITH UNIQUE KEY matnr.
 
-SELECT * FROM zot_00_t_materia INTO TABLE gt_material.
-DATA: gt_material_c TYPE SORTED TABLE OF zot_00_t_materia WITH UNIQUE KEY matnr.
-
-gt_material_c =
-VALUE #( BASE gt_material_c ( matnr = 01
+lt_material_2 =
+VALUE #( BASE lt_material_2 ( matnr = 01
                             maktx = 'Buzdolabı'
                             matkl = 'C'
                             menge = 6
-                            meins = 'ST' ) ).
-gt_material_c =
-VALUE #( BASE gt_material_c ( matnr = 02
+                            meins = 'ST' )
+
+                           ( matnr = 02
                             maktx = 'Fırın'
                             matkl = 'C'
                             menge = 5
-                            meins = 'ST' ) ).
-gt_material_c =
-VALUE #( BASE gt_material_c ( matnr = 03
+                            meins = 'ST' )
+
+                           ( matnr = 03
                             maktx = 'Mikrodalga'
                             matkl = 'C'
                             menge = 2
-                            meins = 'ST' ) ).
-gt_material_c =
-VALUE #( BASE gt_material_c ( matnr = 04
+                            meins = 'ST' )
+
+                           ( matnr = 04
                             maktx = 'Ocak'
                             matkl = 'C'
                             menge = 4
-                            meins = 'ST' ) ).
-gt_material_c =
-VALUE #( BASE gt_material_c ( matnr = 05
+                            meins = 'ST' )
+
+                           ( matnr = 05
                             maktx = 'Çaydanlık'
                             matkl = 'C'
                             menge = 8
@@ -51,13 +49,13 @@ VALUE #( BASE gt_material_c ( matnr = 05
 "z li tablodan çekilen: gs_material_ab
 "internal table a benim attığım gs_material_c
 
-LOOP AT gt_material INTO DATA(gs_material_ab).
-  READ TABLE gt_material_c INTO DATA(gs_material_c)
-  WITH KEY meins = gs_material_ab-meins.
+LOOP AT lt_material INTO DATA(ls_material).
+  READ TABLE lt_material_2 INTO DATA(ls_material_2)
+  WITH KEY meins = ls_material-meins.
 
   IF sy-subrc EQ 0.
-    MODIFY gt_material FROM gs_material_ab.
-    gs_material_ab-menge += 10.
+    MODIFY lt_material FROM ls_material.
+    ls_material-menge += 10.
 
   ENDIF.
 ENDLOOP.
@@ -66,19 +64,34 @@ DATA: ls_combined_datas TYPE zot_00_t_materia,  "kısa süreliğine bu satırda 
       lt_combined_datas TYPE TABLE OF zot_00_t_materia.
 
 
-APPEND LINES OF gt_material_c TO lt_combined_datas.
-APPEND LINES OF gt_material TO lt_combined_datas.
+APPEND LINES OF lt_material_2 TO lt_combined_datas.
+APPEND LINES OF lt_material TO lt_combined_datas.
 
-DATA: ls_material_group_total TYPE zot_00_t_materia,
-      lt_material_group_total TYPE TABLE OF zot_00_t_materia.
+TYPES: BEGIN OF lty_collect_material,
+         matkl TYPE zot_00_t_materia-matkl,
+         menge TYPE zot_00_t_materia-menge,
+       END OF lty_collect_material.
+
+*DATA: ls_material_group_total TYPE zot_00_t_materia,
+*      lt_material_group_total TYPE TABLE OF zot_00_t_materia.
+
+      DATA: ls_material_group_total TYPE lty_collect_material,
+      lt_material_group_total TYPE TABLE OF lty_collect_material.
 
 
-LOOP AT lt_combined_datas INTO ls_combined_datas.
-  ADD ls_combined_datas-menge TO ls_material_group_total-menge.
-  IF ls_combined_datas-menge LT 10.
-    DELETE lt_combined_datas WHERE matnr = ls_combined_datas-matnr.
-  ENDIF.
+LOOP AT lt_combined_datas INTO DATA(ls_combine).
+  CLEAR: ls_material_group_total.
+  ls_material_group_total = VALUE #( matkl = ls_combine-matkl
+                                       menge = ls_combine-menge ).
+
+COLLECT ls_material_group_total INTO lt_material_group_total.
+
+  "IF lt_material_group_total < 10.
+    DELETE lt_combined_datas WHERE menge < 10.
+ " ENDIF.
 ENDLOOP.
+
+
 
 SORT lt_combined_datas BY menge ASCENDING.
 SORT lt_material_group_total BY menge DESCENDING.
@@ -87,10 +100,3 @@ SORT lt_material_group_total BY menge DESCENDING.
 cl_demo_output=>display( lt_combined_datas ).
 
 cl_demo_output=>display( lt_material_group_total ).
-
-*LOOP AT lt_combined_datas INTO ls_combined_datas WHERE menge GT 10.
-*  WRITE: / ls_combined_datas-matnr,
-*           ls_combined_datas-maktx,
-*           ls_combined_datas-menge.
-
-*ENDLOOP.
