@@ -49,6 +49,7 @@ START-OF-SELECTION.
           WRITE :/ 'Tweet Atılamadı'.
         ENDIF.
       ENDIF.
+
     WHEN t_degis .
       gs_mytwitter-tweet_id = p_tw_id.
       gs_mytwitter-tweet = p_tweet.

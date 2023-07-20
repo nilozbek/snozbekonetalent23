@@ -96,6 +96,21 @@ CLEAR lv_bolme.
 
 cl_demo_output=>write( | Clear işleminden sonra lv_bolme nin değeri: { lv_bolme }| ).
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+TRY.
+    lv_bolme = lv_number1 / lv_number2.
+
+  CATCH cx_sy_zerodivide.
+    cl_demo_output=>write( | Sıfıra bölme işlemi yapılamaz!| ).
+
+  CATCH cx_sy_arithmetic_overflow.
+    cl_demo_output=>write( | Aritmetik Overfow| ).
+ENDTRY.
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+*call FUNCTION 'zot_23_do_math_ops'
 
 
 
@@ -103,4 +118,5 @@ cl_demo_output=>write( | Clear işleminden sonra lv_bolme nin değeri: { lv_bolm
 
 
 
-cl_demo_output=>display( ).
+
+*cl_demo_output=>display( ).
